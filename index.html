@@ -715,6 +715,53 @@
 
 </div>
 
+    <!-- REPORT LOST DEVICE PANEL -->
+
+<div
+  id="lostDevicePanel"
+  class="hidden"
+  style="
+    background:white;
+    padding:22px;
+    border-radius:18px;
+    margin-bottom:20px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.06);
+  "
+>
+
+  <h2 style="margin-bottom:8px;">
+    Report Lost Device
+  </h2>
+
+  <p
+    style="
+      color:#667085;
+      font-size:13px;
+      margin-bottom:18px;
+      line-height:1.5;
+    "
+  >
+    Select the device you have lost. Its status will be changed to Lost.
+  </p>
+
+  <div
+    id="lostDeviceList"
+  >
+    <p style="color:#667085;font-size:13px;">
+      Loading devices...
+    </p>
+  </div>
+
+  <button
+    id="cancelLostBtn"
+    class="secondary-btn"
+    type="button"
+  >
+    Cancel
+  </button>
+
+</div>
+
     <!-- ACTION BUTTONS-->
 
     <div class="action-grid">
