@@ -55,7 +55,17 @@ const closeCaseDetailsBtn =
 
 const reportLostBtn = document.getElementById("reportLostBtn");
 const foundPhoneBtn = document.getElementById("foundPhoneBtn");
-console.log("FOUND PHONE BUTTON:", foundPhoneBtn);
+const finderCaseId =
+  document.getElementById("finderCaseId");
+
+const finderSearchBtn =
+  document.getElementById("finderSearchBtn");
+
+const cancelFinderBtn =
+  document.getElementById("cancelFinderBtn");
+
+const finderPanel =
+  document.getElementById("finderPanel");
 const lostDevicePanel = document.getElementById("lostDevicePanel");
 const lostDeviceList = document.getElementById("lostDeviceList");
 const cancelLostBtn = document.getElementById("cancelLostBtn");
