@@ -627,16 +627,20 @@ async function loadDevices() {
 
 
           <span
-            style="
-              background:#eef2f7;
-              padding:5px 9px;
-              border-radius:20px;
-              font-size:11px;
-              font-weight:600;
-            "
-          >
-            ${escapeHtml(device.status)}
-          </span>
+  style="
+    background:${getStatusBackground(device.status)};
+    color:${getStatusColor(device.status)};
+    padding:5px 10px;
+    border-radius:20px;
+    font-size:11px;
+    font-weight:700;
+    text-transform:capitalize;
+    white-space:nowrap;
+  "
+>
+  ${getStatusIcon(device.status)}
+  ${escapeHtml(device.status)}
+</span>
 
         </div>
 
