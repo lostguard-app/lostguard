@@ -23,13 +23,31 @@
       font-family: Arial, sans-serif;
       background: #f4f7fb;
       color: #172033;
-      display: flex;
-      align-items: center;
-      justify-content: center;
       padding: 20px;
     }
 
+    button {
+      font-family: inherit;
+    }
+
     .container {
+      width: 100%;
+      max-width: 900px;
+      margin: auto;
+    }
+
+    /* =========================
+       LOGIN / REGISTER
+    ========================= */
+
+    .auth-container {
+      min-height: calc(100vh - 40px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .auth-box {
       width: 100%;
       max-width: 430px;
     }
@@ -120,10 +138,6 @@
       margin-top: 5px;
     }
 
-    .primary-btn:hover {
-      opacity: 0.92;
-    }
-
     .secondary-btn {
       width: 100%;
       border: 1px solid #d9dee8;
@@ -148,134 +162,547 @@
       display: none;
     }
 
-    .footer {
-      text-align: center;
-      margin-top: 20px;
-      color: #98a2b3;
-      font-size: 12px;
+    .hidden {
+      display: none !important;
     }
 
-    .hidden {
+    /* =========================
+       DASHBOARD
+    ========================= */
+
+    #dashboardView {
       display: none;
+    }
+
+    .dashboard-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0 25px;
+      gap: 15px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 13px;
+      background: #172033;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 23px;
+    }
+
+    .brand h1 {
+      font-size: 22px;
+    }
+
+    .brand p {
+      color: #667085;
+      font-size: 12px;
+      margin-top: 3px;
+    }
+
+    .logout-btn {
+      border: 1px solid #d9dee8;
+      background: white;
+      padding: 10px 14px;
+      border-radius: 9px;
+      cursor: pointer;
+      font-weight: 600;
+      color: #172033;
+    }
+
+    .welcome {
+      background: #172033;
+      color: white;
+      border-radius: 20px;
+      padding: 25px;
+      margin-bottom: 20px;
+    }
+
+    .welcome small {
+      opacity: 0.7;
+    }
+
+    .welcome h2 {
+      margin-top: 7px;
+      font-size: 25px;
+    }
+
+    .welcome p {
+      margin-top: 7px;
+      opacity: 0.75;
+      font-size: 14px;
+    }
+
+    .section-title {
+      font-size: 18px;
+      margin-bottom: 12px;
+    }
+
+    .devices-card {
+      background: white;
+      border-radius: 18px;
+      padding: 22px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+      margin-bottom: 20px;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 30px 10px;
+      color: #667085;
+    }
+
+    .empty-icon {
+      font-size: 38px;
+      margin-bottom: 10px;
+    }
+
+    .empty-state h3 {
+      color: #172033;
+      margin-bottom: 7px;
+    }
+
+    .action-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+
+    .action-card {
+      background: white;
+      border: 1px solid #e5e9f0;
+      border-radius: 16px;
+      padding: 20px;
+      cursor: pointer;
+      text-align: left;
+      transition: 0.2s;
+    }
+
+    .action-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.07);
+    }
+
+    .action-icon {
+      font-size: 27px;
+      margin-bottom: 12px;
+    }
+
+    .action-card h3 {
+      font-size: 16px;
+      margin-bottom: 5px;
+    }
+
+    .action-card p {
+      color: #667085;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .danger {
+      border-color: #f2d0d0;
+    }
+
+    .footer {
+      text-align: center;
+      color: #98a2b3;
+      font-size: 12px;
+      padding: 30px 0 10px;
+    }
+
+    @media (max-width: 600px) {
+
+      body {
+        padding: 15px;
+      }
+
+      .dashboard-header {
+        align-items: flex-start;
+      }
+
+      .action-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .welcome h2 {
+        font-size: 22px;
+      }
+
+      .brand h1 {
+        font-size: 20px;
+      }
+
+      .logout-btn {
+        padding: 9px 11px;
+      }
     }
   </style>
 </head>
 
 <body>
 
-  <div class="container">
+  <!-- =========================
+       AUTHENTICATION
+  ========================== -->
 
-    <div class="logo">
-      <div class="logo-icon">🛡️</div>
+  <div id="authView" class="auth-container">
 
-      <h1>LostGuard</h1>
+    <div class="auth-box">
 
-      <p>Privacy-first Lost Device Recovery Network</p>
-    </div>
+      <div class="logo">
 
-    <div class="card">
+        <div class="logo-icon">
+          🛡️
+        </div>
 
-      <!-- LOGIN -->
-      <div id="loginView">
+        <h1>LostGuard</h1>
 
-        <h2>Welcome back</h2>
-
-        <p class="card-description">
-          Sign in to manage your protected devices.
+        <p>
+          Privacy-first Lost Device Recovery Network
         </p>
-
-        <div class="field">
-          <label for="loginEmail">Email</label>
-
-          <input
-            type="email"
-            id="loginEmail"
-            placeholder="you@example.com"
-            autocomplete="email"
-          >
-        </div>
-
-        <div class="field">
-          <label for="loginPassword">Password</label>
-
-          <input
-            type="password"
-            id="loginPassword"
-            placeholder="Enter your password"
-            autocomplete="current-password"
-          >
-        </div>
-
-        <button class="primary-btn" id="loginBtn">
-          Login
-        </button>
-
-        <button class="secondary-btn" id="showRegisterBtn">
-          Create an account
-        </button>
 
       </div>
 
 
-      <!-- REGISTER -->
-      <div id="registerView" class="hidden">
+      <div class="card">
 
-        <h2>Create your account</h2>
+        <!-- LOGIN -->
 
-        <p class="card-description">
-          Start protecting your devices with LostGuard.
-        </p>
+        <div id="loginView">
 
-        <div class="field">
-          <label for="registerName">Full name</label>
+          <h2>Welcome back</h2>
 
-          <input
-            type="text"
-            id="registerName"
-            placeholder="Your name"
-            autocomplete="name"
+          <p class="card-description">
+            Sign in to manage your protected devices.
+          </p>
+
+          <div class="field">
+
+            <label for="loginEmail">
+              Email
+            </label>
+
+            <input
+              type="email"
+              id="loginEmail"
+              placeholder="you@example.com"
+              autocomplete="email"
+            >
+
+          </div>
+
+
+          <div class="field">
+
+            <label for="loginPassword">
+              Password
+            </label>
+
+            <input
+              type="password"
+              id="loginPassword"
+              placeholder="Enter your password"
+              autocomplete="current-password"
+            >
+
+          </div>
+
+
+          <button
+            class="primary-btn"
+            id="loginBtn"
           >
+            Login
+          </button>
+
+
+          <button
+            class="secondary-btn"
+            id="showRegisterBtn"
+          >
+            Create an account
+          </button>
+
         </div>
 
-        <div class="field">
-          <label for="registerEmail">Email</label>
 
-          <input
-            type="email"
-            id="registerEmail"
-            placeholder="you@example.com"
-            autocomplete="email"
+        <!-- REGISTER -->
+
+        <div
+          id="registerView"
+          class="hidden"
+        >
+
+          <h2>Create your account</h2>
+
+          <p class="card-description">
+            Start protecting your devices with LostGuard.
+          </p>
+
+
+          <div class="field">
+
+            <label for="registerName">
+              Full name
+            </label>
+
+            <input
+              type="text"
+              id="registerName"
+              placeholder="Your name"
+              autocomplete="name"
+            >
+
+          </div>
+
+
+          <div class="field">
+
+            <label for="registerEmail">
+              Email
+            </label>
+
+            <input
+              type="email"
+              id="registerEmail"
+              placeholder="you@example.com"
+              autocomplete="email"
+            >
+
+          </div>
+
+
+          <div class="field">
+
+            <label for="registerPassword">
+              Password
+            </label>
+
+            <input
+              type="password"
+              id="registerPassword"
+              placeholder="Minimum 6 characters"
+              autocomplete="new-password"
+            >
+
+          </div>
+
+
+          <button
+            class="primary-btn"
+            id="registerBtn"
           >
+            Create Account
+          </button>
+
+
+          <button
+            class="secondary-btn"
+            id="showLoginBtn"
+          >
+            Back to Login
+          </button>
+
         </div>
 
-        <div class="field">
-          <label for="registerPassword">Password</label>
 
-          <input
-            type="password"
-            id="registerPassword"
-            placeholder="Minimum 6 characters"
-            autocomplete="new-password"
-          >
+        <div
+          id="status"
+          class="status"
+        ></div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================
+       DASHBOARD
+  ========================== -->
+
+  <div
+    id="dashboardView"
+    class="container"
+  >
+
+    <header class="dashboard-header">
+
+      <div class="brand">
+
+        <div class="brand-icon">
+          🛡️
         </div>
 
-        <button class="primary-btn" id="registerBtn">
-          Create Account
-        </button>
+        <div>
 
-        <button class="secondary-btn" id="showLoginBtn">
-          Back to Login
-        </button>
+          <h1>LostGuard</h1>
+
+          <p>
+            Device Recovery Network
+          </p>
+
+        </div>
 
       </div>
 
 
-      <div id="status" class="status"></div>
+      <button
+        id="logoutBtn"
+        class="logout-btn"
+      >
+        Logout
+      </button>
+
+    </header>
+
+
+    <section class="welcome">
+
+      <small>
+        Welcome back
+      </small>
+
+      <h2 id="welcomeName">
+        User
+      </h2>
+
+      <p id="welcomeEmail">
+        Manage and protect your registered devices.
+      </p>
+
+    </section>
+
+
+    <h2 class="section-title">
+      My Devices
+    </h2>
+
+
+    <section class="devices-card">
+
+      <div
+        id="deviceList"
+        class="empty-state"
+      >
+
+        <div class="empty-icon">
+          📱
+        </div>
+
+        <h3>
+          No devices registered yet
+        </h3>
+
+        <p>
+          Register your phone to start protecting it.
+        </p>
+
+      </div>
+
+    </section>
+
+
+    <div class="action-grid">
+
+      <button
+        class="action-card"
+        id="addDeviceBtn"
+      >
+
+        <div class="action-icon">
+          ➕
+        </div>
+
+        <h3>
+          Add Device
+        </h3>
+
+        <p>
+          Register your phone with LostGuard.
+        </p>
+
+      </button>
+
+
+      <button
+        class="action-card danger"
+        id="reportLostBtn"
+      >
+
+        <div class="action-icon">
+          🔴
+        </div>
+
+        <h3>
+          Report Lost Device
+        </h3>
+
+        <p>
+          Start a recovery case for a lost device.
+        </p>
+
+      </button>
+
+
+      <button
+        class="action-card"
+        id="foundPhoneBtn"
+      >
+
+        <div class="action-icon">
+          📱
+        </div>
+
+        <h3>
+          I Found a Phone
+        </h3>
+
+        <p>
+          Help return a registered lost device.
+        </p>
+
+      </button>
+
+
+      <button
+        class="action-card"
+        id="accountBtn"
+      >
+
+        <div class="action-icon">
+          ⚙️
+        </div>
+
+        <h3>
+          Account
+        </h3>
+
+        <p>
+          Manage your LostGuard account.
+        </p>
+
+      </button>
 
     </div>
+
 
     <div class="footer">
-      LostGuard © 2026 · Privacy-first device recovery
+
+      LostGuard © 2026 ·
+      Privacy-first device recovery
+
     </div>
 
   </div>
@@ -285,7 +712,10 @@
   <script src="config.js"></script>
 
   <!-- LostGuard application -->
-  <script type="module" src="app.js"></script>
+  <script
+    type="module"
+    src="app.js"
+  ></script>
 
 </body>
 </html>
