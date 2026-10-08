@@ -680,6 +680,75 @@ async function loadDevices() {
 
 
 // =============================
+// DEVICE STATUS UI
+// =============================
+
+function getStatusBackground(status) {
+
+  switch (status) {
+
+    case "lost":
+      return "#fee2e2";
+
+    case "found":
+      return "#ffedd5";
+
+    case "recovered":
+      return "#dbeafe";
+
+    case "registered":
+    default:
+      return "#dcfce7";
+
+  }
+
+}
+
+
+function getStatusColor(status) {
+
+  switch (status) {
+
+    case "lost":
+      return "#b91c1c";
+
+    case "found":
+      return "#c2410c";
+
+    case "recovered":
+      return "#1d4ed8";
+
+    case "registered":
+    default:
+      return "#15803d";
+
+  }
+
+}
+
+
+function getStatusIcon(status) {
+
+  switch (status) {
+
+    case "lost":
+      return "🔴";
+
+    case "found":
+      return "🟠";
+
+    case "recovered":
+      return "🔵";
+
+    case "registered":
+    default:
+      return "🟢";
+
+  }
+
+}
+
+// =============================
 // SECURITY HELPERS
 // =============================
 
