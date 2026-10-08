@@ -657,9 +657,7 @@ async function loadDevices() {
 
 
   if (!user) {
-
     return;
-
   }
 
 
@@ -669,13 +667,13 @@ async function loadDevices() {
   } = await supabase
     .from("devices")
     .select(`
-  *,
-  recovery_cases (
-    case_id,
-    status,
-    reported_at
-  )
-`)
+      *,
+      recovery_cases (
+        case_id,
+        status,
+        reported_at
+      )
+    `)
     .eq("owner_id", user.id)
     .order("created_at", {
       ascending: false
@@ -695,7 +693,6 @@ async function loadDevices() {
     `;
 
     return;
-
   }
 
 
@@ -710,7 +707,6 @@ async function loadDevices() {
     `;
 
     return;
-
   }
 
 
@@ -755,20 +751,20 @@ async function loadDevices() {
 
 
           <span
-  style="
-    background:${getStatusBackground(device.status)};
-    color:${getStatusColor(device.status)};
-    padding:5px 10px;
-    border-radius:20px;
-    font-size:11px;
-    font-weight:700;
-    text-transform:capitalize;
-    white-space:nowrap;
-  "
->
-  ${getStatusIcon(device.status)}
-  ${escapeHtml(device.status)}
-</span>
+            style="
+              background:${getStatusBackground(device.status)};
+              color:${getStatusColor(device.status)};
+              padding:5px 10px;
+              border-radius:20px;
+              font-size:11px;
+              font-weight:700;
+              text-transform:capitalize;
+              white-space:nowrap;
+            "
+          >
+            ${getStatusIcon(device.status)}
+            ${escapeHtml(device.status)}
+          </span>
 
         </div>
 
@@ -787,45 +783,54 @@ async function loadDevices() {
             ${maskImei(device.imei_1)}
           </div>
 
-          ${
-  device.status === "lost" && device.recovery_cases?.length
-    ? `
-      <div
-        style="
-          margin-top:8px;
-          padding:10px;
-          background:#fff1f2;
-          border-radius:10px;
-          color:#9f1239;
-          font-weight:600;
-        "
-      >
-        <button
-  type="button"
-  class="secondary-btn"
-  data-case-id="${escapeHtml(device.recovery_cases[0].case_id)}"
-  style="
-    margin-top:8px;
-    width:auto;
-    padding:8px 12px;
-    font-size:12px;
-  "
->
-  🔎 Recovery Case:
-  ${escapeHtml(device.recovery_cases[0].case_id)}
-</button>
-      </div>
-    `
-    : ""
-}
-
 
           ${
             device.phone_number
-              ? `<div>
-                   Phone:
-                   ${escapeHtml(device.phone_number)}
-                 </div>`
+              ? `
+                <div>
+                  Phone:
+                  ${escapeHtml(device.phone_number)}
+                </div>
+              `
+              : ""
+          }
+
+
+          ${
+            device.status === "lost" &&
+            device.recovery_cases?.length
+              ? `
+                <div
+                  style="
+                    margin-top:8px;
+                    padding:10px;
+                    background:#fff1f2;
+                    border-radius:10px;
+                  "
+                >
+
+                  <button
+                    type="button"
+                    class="secondary-btn"
+                    data-case-id="${escapeHtml(
+                      device.recovery_cases[0].case_id
+                    )}"
+                    style="
+                      margin-top:0;
+                      width:auto;
+                      padding:8px 12px;
+                      font-size:12px;
+                      color:#9f1239;
+                    "
+                  >
+                    🔎 Recovery Case:
+                    ${escapeHtml(
+                      device.recovery_cases[0].case_id
+                    )}
+                  </button>
+
+                </div>
+              `
               : ""
           }
 
@@ -835,6 +840,26 @@ async function loadDevices() {
 
     `
   ).join("");
+
+
+  // =============================
+  // RECOVERY CASE BUTTONS
+  // =============================
+
+  document
+    .querySelectorAll("[data-case-id]")
+    .forEach(button => {
+
+      button.addEventListener("click", () => {
+
+        const caseId =
+          button.getAttribute("data-case-id");
+
+        openCaseDetails(caseId);
+
+      });
+
+    });
 
 }
 
