@@ -401,6 +401,71 @@ foundPhoneBtn.addEventListener("click", () => {
 
 });
 
+// =============================
+// FINDER SEARCH
+// =============================
+
+finderSearchBtn.addEventListener("click", async () => {
+
+  const caseId = finderCaseId.value.trim();
+
+  if (!caseId) {
+    showStatus("Please enter a Recovery Case ID.");
+    return;
+  }
+
+  finderSearchBtn.disabled = true;
+  finderSearchBtn.textContent = "Searching...";
+
+  try {
+
+    const { data, error } = await supabase.rpc(
+      "find_recovery_case",
+      {
+        lookup_case_id: caseId
+      }
+    );
+
+    if (error) {
+      console.error(error);
+      showStatus("Unable to search recovery case.");
+      return;
+    }
+
+    if (!data || data.length === 0) {
+      showStatus("Recovery Case not found.");
+      return;
+    }
+
+    console.log("Recovery case found:", data[0]);
+
+    showStatus("Recovery Case found successfully.");
+
+  } finally {
+
+    finderSearchBtn.disabled = false;
+    finderSearchBtn.textContent =
+      "🔎 Search Recovery Case";
+
+  }
+
+});
+
+
+// =============================
+// CANCEL FINDER
+// =============================
+
+cancelFinderBtn.addEventListener("click", () => {
+
+  finderPanel.classList.add("hidden");
+
+  foundPhoneBtn.style.display = "block";
+
+  finderCaseId.value = "";
+
+});
+
 
 // =============================
 // ADD DEVICE FORM
