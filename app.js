@@ -538,6 +538,104 @@ saveDeviceBtn.addEventListener(
 
 
 // =============================
+// RECOVERY CASE DETAILS
+// =============================
+
+async function openCaseDetails(caseId) {
+
+  caseDetailsPanel.classList.remove("hidden");
+
+  caseDetailsId.textContent = "Loading...";
+  caseDetailsDevice.textContent = "Loading...";
+  caseDetailsStatus.textContent = "Loading...";
+  caseDetailsReported.textContent = "Loading...";
+
+
+  const {
+    data: {
+      user
+    }
+  } = await supabase.auth.getUser();
+
+
+  if (!user) {
+
+    showStatus("Please login again.");
+
+    return;
+
+  }
+
+
+  const {
+    data,
+    error
+  } = await supabase
+    .from("recovery_cases")
+    .select(`
+      case_id,
+      status,
+      reported_at,
+      devices (
+        device_name,
+        manufacturer,
+        model
+      )
+    `)
+    .eq("case_id", caseId)
+    .eq("owner_id", user.id)
+    .single();
+
+
+  if (error) {
+
+    console.error(error);
+
+    caseDetailsId.textContent = "Unable to load case";
+    caseDetailsDevice.textContent = "";
+    caseDetailsStatus.textContent = "";
+    caseDetailsReported.textContent = "";
+
+    return;
+
+  }
+
+
+  caseDetailsId.textContent = data.case_id;
+
+  const device = data.devices;
+
+  caseDetailsDevice.textContent =
+    [
+      device?.device_name,
+      device?.manufacturer,
+      device?.model
+    ]
+      .filter(Boolean)
+      .join(" • ") || "Unknown device";
+
+
+  caseDetailsStatus.textContent =
+    data.status;
+
+
+  caseDetailsReported.textContent =
+    new Date(data.reported_at).toLocaleString();
+
+}
+
+
+// =============================
+// CLOSE CASE DETAILS
+// =============================
+
+closeCaseDetailsBtn.addEventListener("click", () => {
+
+  caseDetailsPanel.classList.add("hidden");
+
+});
+
+// =============================
 // LOAD MY DEVICES
 // =============================
 
