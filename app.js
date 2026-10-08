@@ -371,6 +371,19 @@ supabase.auth.onAuthStateChange(
 
 
 // =============================
+// I FOUND A PHONE
+// =============================
+
+foundPhoneBtn.addEventListener("click", () => {
+
+  showStatus(
+    "Finder feature is coming next."
+  );
+
+});
+
+
+// =============================
 // ADD DEVICE FORM
 // =============================
 
