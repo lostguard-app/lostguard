@@ -567,12 +567,17 @@ async function openCaseDetails(caseId) {
   }
 
 
+  // =============================
+  // LOAD RECOVERY CASE
+  // =============================
+
   const {
     data,
     error
   } = await supabase
     .from("recovery_cases")
     .select(`
+      id,
       case_id,
       status,
       reported_at,
@@ -601,6 +606,10 @@ async function openCaseDetails(caseId) {
   }
 
 
+  // =============================
+  // CASE INFORMATION
+  // =============================
+
   caseDetailsId.textContent = data.case_id;
 
   const device = data.devices;
@@ -622,6 +631,193 @@ async function openCaseDetails(caseId) {
   caseDetailsReported.textContent =
     new Date(data.reported_at).toLocaleString();
 
+
+  // =============================
+  // LOAD RECOVERY TIMELINE
+  // =============================
+
+  const {
+    data: events,
+    error: eventsError
+  } = await supabase
+    .from("recovery_case_events")
+    .select(`
+      id,
+      event_type,
+      title,
+      description,
+      created_at
+    `)
+    .eq("case_id", data.id)
+    .order("created_at", {
+      ascending: false
+    });
+
+
+  if (eventsError) {
+
+    console.error(eventsError);
+
+    return;
+
+  }
+
+
+  // =============================
+  // TIMELINE CONTAINER
+  // =============================
+
+  let timelineContainer =
+    document.getElementById("recoveryTimeline");
+
+
+  if (!timelineContainer) {
+
+    timelineContainer =
+      document.createElement("div");
+
+    timelineContainer.id =
+      "recoveryTimeline";
+
+    timelineContainer.style.marginTop =
+      "20px";
+
+    caseDetailsPanel.appendChild(
+      timelineContainer
+    );
+
+  }
+
+
+  // =============================
+  // NO EVENTS
+  // =============================
+
+  if (!events || events.length === 0) {
+
+    timelineContainer.innerHTML = `
+      <div style="
+        padding:16px;
+        border-radius:12px;
+        background:#f8fafc;
+        color:#64748b;
+        font-size:14px;
+      ">
+        No recovery timeline events yet.
+      </div>
+    `;
+
+    return;
+
+  }
+
+
+  // =============================
+  // RENDER TIMELINE
+  // =============================
+
+  timelineContainer.innerHTML = `
+    <h3 style="
+      margin:0 0 14px 0;
+      font-size:18px;
+    ">
+      Recovery Timeline
+    </h3>
+
+    <div style="
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    ">
+
+      ${events.map(event => {
+
+        let icon = "🔵";
+
+        if (event.event_type === "lost_reported") {
+          icon = "🔴";
+        }
+
+        if (event.event_type === "location_update") {
+          icon = "📍";
+        }
+
+        if (event.event_type === "finder_contact") {
+          icon = "💬";
+        }
+
+        if (event.event_type === "device_found") {
+          icon = "🟠";
+        }
+
+        if (event.event_type === "device_recovered") {
+          icon = "🟢";
+        }
+
+        if (event.event_type === "case_closed") {
+          icon = "✅";
+        }
+
+        return `
+          <div style="
+            display:flex;
+            gap:12px;
+            padding:14px;
+            border:1px solid #e2e8f0;
+            border-radius:12px;
+            background:#ffffff;
+          ">
+
+            <div style="
+              font-size:22px;
+              min-width:30px;
+            ">
+              ${icon}
+            </div>
+
+            <div style="flex:1;">
+
+              <div style="
+                font-weight:600;
+                color:#0f172a;
+                margin-bottom:4px;
+              ">
+                ${escapeHtml(event.title)}
+              </div>
+
+              ${
+                event.description
+                  ? `
+                    <div style="
+                      font-size:13px;
+                      color:#64748b;
+                      margin-bottom:6px;
+                    ">
+                      ${escapeHtml(event.description)}
+                    </div>
+                  `
+                  : ""
+              }
+
+              <div style="
+                font-size:12px;
+                color:#94a3b8;
+              ">
+                ${new Date(
+                  event.created_at
+                ).toLocaleString()}
+              </div>
+
+            </div>
+
+          </div>
+        `;
+
+      }).join("")}
+
+    </div>
+  `;
+
 }
 
 
@@ -634,6 +830,7 @@ closeCaseDetailsBtn.addEventListener("click", () => {
   caseDetailsPanel.classList.add("hidden");
 
 });
+  
 
 // =============================
 // LOAD MY DEVICES
