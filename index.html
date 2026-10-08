@@ -616,6 +616,66 @@
 
     <div class="action-grid">
 
+      <!-- ADD DEVICE FORM -->
+<div id="addDeviceForm" class="hidden">
+
+  <h2>Add Your Device</h2>
+
+  <input
+    type="text"
+    id="deviceName"
+    placeholder="Device Name (e.g. My Phone)"
+  >
+
+  <input
+    type="text"
+    id="manufacturer"
+    placeholder="Manufacturer (e.g. Samsung)"
+  >
+
+  <input
+    type="text"
+    id="model"
+    placeholder="Model (e.g. Galaxy S24)"
+  >
+
+  <input
+    type="text"
+    id="imei1"
+    placeholder="IMEI 1"
+    inputmode="numeric"
+  >
+
+  <input
+    type="text"
+    id="imei2"
+    placeholder="IMEI 2 (Optional)"
+    inputmode="numeric"
+  >
+
+  <input
+    type="text"
+    id="serialNumber"
+    placeholder="Serial Number (Optional)"
+  >
+
+  <input
+    type="text"
+    id="phoneNumber"
+    placeholder="Phone Number (Optional)"
+    inputmode="tel"
+  >
+
+  <button id="saveDeviceBtn">
+    Save Device
+  </button>
+
+  <button id="cancelDeviceBtn">
+    Cancel
+  </button>
+
+</div>
+
       <button
         class="action-card"
         id="addDeviceBtn"
