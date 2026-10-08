@@ -971,6 +971,21 @@ async function loadLostDeviceList() {
 
   `).join("");
 
+  document
+  .querySelectorAll("[data-case-id]")
+  .forEach(button => {
+
+    button.addEventListener("click", () => {
+
+      const caseId =
+        button.getAttribute("data-case-id");
+
+      openCaseDetails(caseId);
+
+    });
+
+  });
+
 
   document
     .querySelectorAll("[data-lost-device-id]")
