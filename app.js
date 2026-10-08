@@ -35,6 +35,11 @@ const saveDeviceBtn = document.getElementById("saveDeviceBtn");
 const cancelDeviceBtn = document.getElementById("cancelDeviceBtn");
 const deviceList = document.getElementById("deviceList");
 
+const reportLostBtn = document.getElementById("reportLostBtn");
+const lostDevicePanel = document.getElementById("lostDevicePanel");
+const lostDeviceList = document.getElementById("lostDeviceList");
+const cancelLostBtn = document.getElementById("cancelLostBtn");
+
 
 // =============================
 // STATUS
