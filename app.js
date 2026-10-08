@@ -552,7 +552,14 @@ async function loadDevices() {
     error
   } = await supabase
     .from("devices")
-    .select("*")
+    .select(`
+  *,
+  recovery_cases (
+    case_id,
+    status,
+    reported_at
+  )
+`)
     .eq("owner_id", user.id)
     .order("created_at", {
       ascending: false
