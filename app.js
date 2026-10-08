@@ -671,6 +671,26 @@ async function loadDevices() {
             ${maskImei(device.imei_1)}
           </div>
 
+          ${
+  device.status === "lost" && device.recovery_cases?.length
+    ? `
+      <div
+        style="
+          margin-top:8px;
+          padding:10px;
+          background:#fff1f2;
+          border-radius:10px;
+          color:#9f1239;
+          font-weight:600;
+        "
+      >
+        Recovery Case:
+        ${escapeHtml(device.recovery_cases[0].case_id)}
+      </div>
+    `
+    : ""
+}
+
 
           ${
             device.phone_number
