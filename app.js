@@ -377,9 +377,9 @@ supabase.auth.onAuthStateChange(
 
 foundPhoneBtn.addEventListener("click", () => {
 
-  showStatus(
-    "Finder feature is coming next."
-  );
+  console.log("I FOUND A PHONE BUTTON CLICKED");
+
+  alert("I Found a Phone button is working!");
 
 });
 
