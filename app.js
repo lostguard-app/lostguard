@@ -361,7 +361,11 @@ cancelDeviceBtn.addEventListener("click", () => {
 // =============================
 
 saveDeviceBtn.addEventListener("click", async (event) => {
+
   event.preventDefault();
+  event.stopPropagation();
+
+  console.log("SAVE DEVICE CLICKED");
 
   const deviceName =
     document.getElementById("deviceName").value.trim();
