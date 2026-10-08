@@ -846,31 +846,53 @@ async function reportDeviceLost(deviceId) {
       "Are you sure you want to report this device as LOST?"
     );
 
-
   if (!confirmed) {
+    return;
+  }
+
+
+  // =============================
+  // GET CURRENT USER
+  // =============================
+
+  const {
+    data: {
+      user
+    }
+  } = await supabase.auth.getUser();
+
+
+  if (!user) {
+
+    showStatus("Please login again.");
 
     return;
 
   }
 
 
+  // =============================
+  // MARK DEVICE AS LOST
+  // =============================
+
   const {
-    error
+    error: deviceError
   } = await supabase
     .from("devices")
     .update({
       status: "lost"
     })
-    .eq("id", deviceId);
+    .eq("id", deviceId)
+    .eq("owner_id", user.id);
 
 
-  if (error) {
+  if (deviceError) {
 
-    console.error(error);
+    console.error(deviceError);
 
     showStatus(
       "Unable to report device: " +
-      error.message
+      deviceError.message
     );
 
     return;
@@ -878,8 +900,46 @@ async function reportDeviceLost(deviceId) {
   }
 
 
+  // =============================
+  // CREATE RECOVERY CASE
+  // =============================
+
+  const {
+    data: recoveryCase,
+    error: caseError
+  } = await supabase
+    .from("recovery_cases")
+    .insert({
+      device_id: deviceId,
+      owner_id: user.id
+    })
+    .select("case_id")
+    .single();
+
+
+  if (caseError) {
+
+    console.error(caseError);
+
+    showStatus(
+      "Device marked lost, but recovery case could not be created: " +
+      caseError.message
+    );
+
+    await loadDevices();
+
+    return;
+
+  }
+
+
+  // =============================
+  // SUCCESS
+  // =============================
+
   showStatus(
-    "Device reported as lost."
+    "Device reported as lost. Recovery Case: " +
+    recoveryCase.case_id
   );
 
 
@@ -891,6 +951,7 @@ async function reportDeviceLost(deviceId) {
   await loadDevices();
 
 }
+
 
 // =============================
 // DEVICE STATUS UI
