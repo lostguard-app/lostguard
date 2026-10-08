@@ -688,6 +688,7 @@ async function loadDevices() {
 // =============================
 
 reportLostBtn.addEventListener("click", async () => {
+  console.log("REPORT LOST BUTTON CLICKED");
 
   lostDevicePanel.classList.remove("hidden");
 
