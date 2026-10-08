@@ -4,24 +4,282 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>LostGuard</title>
+  <title>LostGuard — Device Recovery Network</title>
 
   <meta
     name="description"
     content="LostGuard - Privacy-first lost device recovery network"
   >
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: Arial, sans-serif;
+      background: #f4f7fb;
+      color: #172033;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 430px;
+    }
+
+    .logo {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    .logo-icon {
+      width: 64px;
+      height: 64px;
+      margin: auto;
+      border-radius: 18px;
+      background: #172033;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+    }
+
+    .logo h1 {
+      margin-top: 14px;
+      font-size: 28px;
+    }
+
+    .logo p {
+      margin-top: 7px;
+      color: #667085;
+      font-size: 14px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 22px;
+      padding: 28px;
+      box-shadow: 0 15px 45px rgba(0,0,0,0.08);
+    }
+
+    .card h2 {
+      font-size: 22px;
+      margin-bottom: 8px;
+    }
+
+    .card-description {
+      color: #667085;
+      font-size: 14px;
+      margin-bottom: 24px;
+    }
+
+    .field {
+      margin-bottom: 17px;
+    }
+
+    .field label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 7px;
+    }
+
+    .field input {
+      width: 100%;
+      padding: 13px 14px;
+      border: 1px solid #d9dee8;
+      border-radius: 10px;
+      font-size: 15px;
+      outline: none;
+    }
+
+    .field input:focus {
+      border-color: #172033;
+      box-shadow: 0 0 0 3px rgba(23,32,51,0.08);
+    }
+
+    .primary-btn {
+      width: 100%;
+      border: none;
+      border-radius: 11px;
+      padding: 14px;
+      background: #172033;
+      color: white;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 5px;
+    }
+
+    .primary-btn:hover {
+      opacity: 0.92;
+    }
+
+    .secondary-btn {
+      width: 100%;
+      border: 1px solid #d9dee8;
+      border-radius: 11px;
+      padding: 13px;
+      background: white;
+      color: #172033;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    .status {
+      margin-top: 18px;
+      padding: 12px;
+      border-radius: 10px;
+      background: #f4f7fb;
+      color: #667085;
+      font-size: 13px;
+      line-height: 1.5;
+      display: none;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 20px;
+      color: #98a2b3;
+      font-size: 12px;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
 </head>
 
 <body>
 
-  <h1>🛡️ LostGuard</h1>
+  <div class="container">
 
-  <p>Privacy-first Lost Device Recovery Network</p>
+    <div class="logo">
+      <div class="logo-icon">🛡️</div>
 
-  <button id="loginBtn">Login</button>
-  <button id="registerBtn">Register</button>
+      <h1>LostGuard</h1>
 
-  <p id="status">Connecting to LostGuard...</p>
+      <p>Privacy-first Lost Device Recovery Network</p>
+    </div>
+
+    <div class="card">
+
+      <!-- LOGIN -->
+      <div id="loginView">
+
+        <h2>Welcome back</h2>
+
+        <p class="card-description">
+          Sign in to manage your protected devices.
+        </p>
+
+        <div class="field">
+          <label for="loginEmail">Email</label>
+
+          <input
+            type="email"
+            id="loginEmail"
+            placeholder="you@example.com"
+            autocomplete="email"
+          >
+        </div>
+
+        <div class="field">
+          <label for="loginPassword">Password</label>
+
+          <input
+            type="password"
+            id="loginPassword"
+            placeholder="Enter your password"
+            autocomplete="current-password"
+          >
+        </div>
+
+        <button class="primary-btn" id="loginBtn">
+          Login
+        </button>
+
+        <button class="secondary-btn" id="showRegisterBtn">
+          Create an account
+        </button>
+
+      </div>
+
+
+      <!-- REGISTER -->
+      <div id="registerView" class="hidden">
+
+        <h2>Create your account</h2>
+
+        <p class="card-description">
+          Start protecting your devices with LostGuard.
+        </p>
+
+        <div class="field">
+          <label for="registerName">Full name</label>
+
+          <input
+            type="text"
+            id="registerName"
+            placeholder="Your name"
+            autocomplete="name"
+          >
+        </div>
+
+        <div class="field">
+          <label for="registerEmail">Email</label>
+
+          <input
+            type="email"
+            id="registerEmail"
+            placeholder="you@example.com"
+            autocomplete="email"
+          >
+        </div>
+
+        <div class="field">
+          <label for="registerPassword">Password</label>
+
+          <input
+            type="password"
+            id="registerPassword"
+            placeholder="Minimum 6 characters"
+            autocomplete="new-password"
+          >
+        </div>
+
+        <button class="primary-btn" id="registerBtn">
+          Create Account
+        </button>
+
+        <button class="secondary-btn" id="showLoginBtn">
+          Back to Login
+        </button>
+
+      </div>
+
+
+      <div id="status" class="status"></div>
+
+    </div>
+
+    <div class="footer">
+      LostGuard © 2026 · Privacy-first device recovery
+    </div>
+
+  </div>
+
 
   <!-- Supabase configuration -->
   <script src="config.js"></script>
