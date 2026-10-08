@@ -54,6 +54,7 @@ const closeCaseDetailsBtn =
   document.getElementById("closeCaseDetailsBtn");
 
 const reportLostBtn = document.getElementById("reportLostBtn");
+const foundPhoneBtn = document.getElementById("foundPhoneBtn");
 const lostDevicePanel = document.getElementById("lostDevicePanel");
 const lostDeviceList = document.getElementById("lostDeviceList");
 const cancelLostBtn = document.getElementById("cancelLostBtn");
