@@ -3,7 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>LostGuard</title>
+
+  <meta
+    name="description"
+    content="LostGuard - Privacy-first lost device recovery network"
+  >
 </head>
 
 <body>
@@ -12,8 +18,16 @@
 
   <p>Privacy-first Lost Device Recovery Network</p>
 
-  <button>Login</button>
-  <button>Register</button>
+  <button id="loginBtn">Login</button>
+  <button id="registerBtn">Register</button>
+
+  <p id="status">Connecting to LostGuard...</p>
+
+  <!-- Supabase configuration -->
+  <script src="config.js"></script>
+
+  <!-- LostGuard application -->
+  <script type="module" src="app.js"></script>
 
 </body>
 </html>
