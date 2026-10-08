@@ -683,6 +683,213 @@ async function loadDevices() {
 
 }
 
+// =============================
+// REPORT LOST DEVICE
+// =============================
+
+reportLostBtn.addEventListener("click", async () => {
+
+  lostDevicePanel.classList.remove("hidden");
+
+  reportLostBtn.style.display = "none";
+
+  await loadLostDeviceList();
+
+});
+
+
+cancelLostBtn.addEventListener("click", () => {
+
+  lostDevicePanel.classList.add("hidden");
+
+  reportLostBtn.style.display = "block";
+
+});
+
+
+// =============================
+// LOAD DEVICES FOR LOST REPORT
+// =============================
+
+async function loadLostDeviceList() {
+
+  lostDeviceList.innerHTML = `
+    <p style="color:#667085;font-size:13px;">
+      Loading devices...
+    </p>
+  `;
+
+
+  const {
+    data: {
+      user
+    }
+  } = await supabase.auth.getUser();
+
+
+  if (!user) {
+
+    lostDeviceList.innerHTML = `
+      <p style="color:#b91c1c;">
+        Please login again.
+      </p>
+    `;
+
+    return;
+
+  }
+
+
+  const {
+    data,
+    error
+  } = await supabase
+    .from("devices")
+    .select("id, device_name, manufacturer, model, status")
+    .eq("owner_id", user.id)
+    .order("created_at", {
+      ascending: false
+    });
+
+
+  if (error) {
+
+    console.error(error);
+
+    lostDeviceList.innerHTML = `
+      <p style="color:#b91c1c;">
+        Unable to load devices.
+      </p>
+    `;
+
+    return;
+
+  }
+
+
+  if (!data || data.length === 0) {
+
+    lostDeviceList.innerHTML = `
+      <p style="color:#667085;">
+        No registered devices found.
+      </p>
+    `;
+
+    return;
+
+  }
+
+
+  lostDeviceList.innerHTML = data.map(device => `
+
+    <button
+      type="button"
+      class="secondary-btn"
+      data-lost-device-id="${device.id}"
+      style="
+        text-align:left;
+        margin-top:8px;
+        padding:15px;
+      "
+    >
+
+      📱
+      <strong>
+        ${escapeHtml(device.device_name)}
+      </strong>
+
+      <br>
+
+      <span
+        style="
+          color:#667085;
+          font-size:12px;
+        "
+      >
+        ${escapeHtml(device.manufacturer || "")}
+        ${escapeHtml(device.model || "")}
+        · ${escapeHtml(device.status)}
+      </span>
+
+    </button>
+
+  `).join("");
+
+
+  document
+    .querySelectorAll("[data-lost-device-id]")
+    .forEach(button => {
+
+      button.addEventListener("click", () => {
+
+        const deviceId =
+          button.getAttribute("data-lost-device-id");
+
+        reportDeviceLost(deviceId);
+
+      });
+
+    });
+
+}
+
+
+// =============================
+// MARK DEVICE AS LOST
+// =============================
+
+async function reportDeviceLost(deviceId) {
+
+  const confirmed =
+    confirm(
+      "Are you sure you want to report this device as LOST?"
+    );
+
+
+  if (!confirmed) {
+
+    return;
+
+  }
+
+
+  const {
+    error
+  } = await supabase
+    .from("devices")
+    .update({
+      status: "lost"
+    })
+    .eq("id", deviceId);
+
+
+  if (error) {
+
+    console.error(error);
+
+    showStatus(
+      "Unable to report device: " +
+      error.message
+    );
+
+    return;
+
+  }
+
+
+  showStatus(
+    "Device reported as lost."
+  );
+
+
+  lostDevicePanel.classList.add("hidden");
+
+  reportLostBtn.style.display = "block";
+
+
+  await loadDevices();
+
+}
 
 // =============================
 // DEVICE STATUS UI
