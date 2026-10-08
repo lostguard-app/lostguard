@@ -78,7 +78,7 @@ function showDashboard(user) {
   welcomeName.textContent = name;
   welcomeEmail.textContent = user.email || "";
 
-    loadDevices();
+  
 
 }
 
