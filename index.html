@@ -614,71 +614,110 @@
     </section>
 
 
-    <div class="action-grid">
+      
+<!-- ADD DEVICE FORM -->
+<div
+  id="addDeviceForm"
+  class="hidden"
+  style="
+    background:white;
+    padding:22px;
+    border-radius:18px;
+    margin-bottom:20px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.06);
+  "
+>
 
-      <!-- ADD DEVICE FORM -->
-<div id="addDeviceForm" class="hidden" onsubmit="return false;">
+  <h2 style="margin-bottom:18px;">
+    Add Your Device
+  </h2>
 
-  <h2>Add Your Device</h2>
+  <div class="field">
+    <label for="deviceName">Device Name</label>
+    <input
+      type="text"
+      id="deviceName"
+      placeholder="e.g. My Phone"
+    >
+  </div>
 
-  <input
-    type="text"
-    id="deviceName"
-    placeholder="Device Name (e.g. My Phone)"
-  >
+  <div class="field">
+    <label for="manufacturer">Manufacturer</label>
+    <input
+      type="text"
+      id="manufacturer"
+      placeholder="e.g. Samsung"
+    >
+  </div>
 
-  <input
-    type="text"
-    id="manufacturer"
-    placeholder="Manufacturer (e.g. Samsung)"
-  >
+  <div class="field">
+    <label for="model">Model</label>
+    <input
+      type="text"
+      id="model"
+      placeholder="e.g. Galaxy S24"
+    >
+  </div>
 
-  <input
-    type="text"
-    id="model"
-    placeholder="Model (e.g. Galaxy S24)"
-  >
+  <div class="field">
+    <label for="imei1">IMEI 1</label>
+    <input
+      type="text"
+      id="imei1"
+      placeholder="Enter IMEI 1"
+      inputmode="numeric"
+    >
+  </div>
 
-  <input
-    type="text"
-    id="imei1"
-    placeholder="IMEI 1"
-    inputmode="numeric"
-  >
+  <div class="field">
+    <label for="imei2">IMEI 2 (Optional)</label>
+    <input
+      type="text"
+      id="imei2"
+      placeholder="Enter IMEI 2"
+      inputmode="numeric"
+    >
+  </div>
 
-  <input
-    type="text"
-    id="imei2"
-    placeholder="IMEI 2 (Optional)"
-    inputmode="numeric"
-  >
+  <div class="field">
+    <label for="serialNumber">Serial Number (Optional)</label>
+    <input
+      type="text"
+      id="serialNumber"
+      placeholder="Enter serial number"
+    >
+  </div>
 
-  <input
-    type="text"
-    id="serialNumber"
-    placeholder="Serial Number (Optional)"
-  >
-
-  <input
-    type="text"
-    id="phoneNumber"
-    placeholder="Phone Number (Optional)"
-    inputmode="tel"
-  >
+  <div class="field">
+    <label for="phoneNumber">Phone Number (Optional)</label>
+    <input
+      type="tel"
+      id="phoneNumber"
+      placeholder="Enter phone number"
+    >
+  </div>
 
   <button
-  type="button"
-  id="saveDeviceBtn"
-  onclick="return false;"
->
-  Save Device
-</button>
+    id="saveDeviceBtn"
+    class="primary-btn"
+    type="button"
+  >
+    Save Device
+  </button>
 
-  <button type="button" id="cancelDeviceBtn">
-  Cancel
-</button>
+  <button
+    id="cancelDeviceBtn"
+    class="secondary-btn"
+    type="button"
+  >
+    Cancel
+  </button>
 
 </div>
+
+    <!-- ACTION BUTTONS-->
+
+    <div class="action-grid">
 
       <button
         class="action-card"
