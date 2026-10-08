@@ -35,13 +35,16 @@ const saveDeviceBtn = document.getElementById("saveDeviceBtn");
 const cancelDeviceBtn = document.getElementById("cancelDeviceBtn");
 const deviceList = document.getElementById("deviceList");
 
+
 // =============================
 // STATUS
 // =============================
 
 function showStatus(message) {
+
   status.textContent = message;
   status.style.display = "block";
+
 }
 
 
@@ -58,6 +61,7 @@ function showLogin() {
   registerView.classList.add("hidden");
 
   status.style.display = "none";
+
 }
 
 
@@ -78,7 +82,7 @@ function showDashboard(user) {
   welcomeName.textContent = name;
   welcomeEmail.textContent = user.email || "";
 
-  
+  loadDevices();
 
 }
 
@@ -124,14 +128,22 @@ registerBtn.addEventListener("click", async () => {
 
 
   if (!name || !email || !password) {
+
     showStatus("Please fill in all fields.");
+
     return;
+
   }
 
 
   if (password.length < 6) {
-    showStatus("Password must contain at least 6 characters.");
+
+    showStatus(
+      "Password must contain at least 6 characters."
+    );
+
     return;
+
   }
 
 
@@ -143,13 +155,16 @@ registerBtn.addEventListener("click", async () => {
 
     const { error } =
       await supabase.auth.signUp({
+
         email,
         password,
+
         options: {
           data: {
             full_name: name
           }
         }
+
       });
 
 
@@ -158,6 +173,7 @@ registerBtn.addEventListener("click", async () => {
       showStatus(error.message);
 
       return;
+
     }
 
 
@@ -201,6 +217,7 @@ loginBtn.addEventListener("click", async () => {
     );
 
     return;
+
   }
 
 
@@ -212,8 +229,10 @@ loginBtn.addEventListener("click", async () => {
 
     const { data, error } =
       await supabase.auth.signInWithPassword({
+
         email,
         password
+
       });
 
 
@@ -222,6 +241,7 @@ loginBtn.addEventListener("click", async () => {
       showStatus(error.message);
 
       return;
+
     }
 
 
@@ -261,6 +281,7 @@ logoutBtn.addEventListener("click", async () => {
     console.error(error);
 
     return;
+
   }
 
 
@@ -286,6 +307,7 @@ async function checkSession() {
     showLogin();
 
     return;
+
   }
 
 
@@ -314,9 +336,7 @@ supabase.auth.onAuthStateChange(
       event
     );
 
-    if (
-      event === "SIGNED_OUT"
-    ) {
+    if (event === "SIGNED_OUT") {
 
       showLogin();
 
@@ -327,13 +347,7 @@ supabase.auth.onAuthStateChange(
 
 
 // =============================
-// START
-// =============================
-
-checkSession();
-
-// =============================
-// ADD DEVICE
+// ADD DEVICE FORM
 // =============================
 
 addDeviceBtn.addEventListener("click", () => {
@@ -344,10 +358,6 @@ addDeviceBtn.addEventListener("click", () => {
 
 });
 
-
-// =============================
-// CANCEL ADD DEVICE
-// =============================
 
 cancelDeviceBtn.addEventListener("click", () => {
 
@@ -362,138 +372,149 @@ cancelDeviceBtn.addEventListener("click", () => {
 // SAVE DEVICE
 // =============================
 
-saveDeviceBtn.addEventListener("click", async (event) => {
+saveDeviceBtn.addEventListener(
+  "click",
+  async (event) => {
 
-  event.preventDefault();
-  event.stopPropagation();
-
-  console.log("SAVE DEVICE CLICKED");
-
-  const deviceName =
-    document.getElementById("deviceName").value.trim();
-
-  const manufacturer =
-    document.getElementById("manufacturer").value.trim();
-
-  const model =
-    document.getElementById("model").value.trim();
-
-  const imei1 =
-    document.getElementById("imei1").value.trim();
-
-  const imei2 =
-    document.getElementById("imei2").value.trim();
-
-  const serialNumber =
-    document.getElementById("serialNumber").value.trim();
-
-  const phoneNumber =
-    document.getElementById("phoneNumber").value.trim();
+    event.preventDefault();
+    event.stopPropagation();
 
 
-  if (!deviceName) {
+    const deviceName =
+      document.getElementById("deviceName").value.trim();
 
-    showStatus("Please enter a device name.");
+    const manufacturer =
+      document.getElementById("manufacturer").value.trim();
 
-    return;
+    const model =
+      document.getElementById("model").value.trim();
 
-  }
+    const imei1 =
+      document.getElementById("imei1").value.trim();
 
+    const imei2 =
+      document.getElementById("imei2").value.trim();
 
-  if (!imei1) {
+    const serialNumber =
+      document.getElementById("serialNumber").value.trim();
 
-    showStatus("Please enter IMEI 1.");
-
-    return;
-
-  }
-
-
-  saveDeviceBtn.disabled = true;
-  saveDeviceBtn.textContent = "Saving...";
-
-
-  try {
-
-    const {
-      data: {
-        user
-      }
-    } = await supabase.auth.getUser();
+    const phoneNumber =
+      document.getElementById("phoneNumber").value.trim();
 
 
-    if (!user) {
+    if (!deviceName) {
 
-      showStatus("Please login again.");
+      showStatus("Please enter a device name.");
 
       return;
 
     }
 
 
-    const {
-      error
-    } = await supabase
-      .from("devices")
-      .insert({
+    if (!imei1) {
 
-        owner_id: user.id,
+      showStatus("Please enter IMEI 1.");
 
-        device_name: deviceName,
+      return;
 
-        manufacturer: manufacturer,
-
-        model: model,
-
-        imei_1: imei1,
-
-        imei_2: imei2 || null,
-
-        serial_number: serialNumber || null,
-
-        phone_number: phoneNumber || null
-
-      });
+    }
 
 
-    if (error) {
+    saveDeviceBtn.disabled = true;
+    saveDeviceBtn.textContent = "Saving...";
 
-      console.error(error);
+
+    try {
+
+      const {
+        data: {
+          user
+        }
+      } = await supabase.auth.getUser();
+
+
+      if (!user) {
+
+        showStatus("Please login again.");
+
+        return;
+
+      }
+
+
+      const {
+        error
+      } = await supabase
+        .from("devices")
+        .insert({
+
+          owner_id: user.id,
+
+          device_name: deviceName,
+
+          manufacturer: manufacturer,
+
+          model: model,
+
+          imei_1: imei1,
+
+          imei_2: imei2 || null,
+
+          serial_number: serialNumber || null,
+
+          phone_number: phoneNumber || null
+
+        });
+
+
+      if (error) {
+
+        console.error(error);
+
+        showStatus(
+          "Unable to save device: " +
+          error.message
+        );
+
+        return;
+
+      }
+
 
       showStatus(
-        "Unable to save device: " + error.message
+        "Device added successfully!"
       );
 
-      return;
+
+      document.getElementById("deviceName").value = "";
+      document.getElementById("manufacturer").value = "";
+      document.getElementById("model").value = "";
+      document.getElementById("imei1").value = "";
+      document.getElementById("imei2").value = "";
+      document.getElementById("serialNumber").value = "";
+      document.getElementById("phoneNumber").value = "";
+
+
+      addDeviceForm.classList.add("hidden");
+      addDeviceBtn.style.display = "block";
+
+
+      // Reload devices immediately
+      await loadDevices();
+
+
+    } finally {
+
+      saveDeviceBtn.disabled = false;
+      saveDeviceBtn.textContent = "Save Device";
 
     }
 
-
-    showStatus("Device added successfully!");
-
-
-    // Clear form
-
-    document.getElementById("deviceName").value = "";
-    document.getElementById("manufacturer").value = "";
-    document.getElementById("model").value = "";
-    document.getElementById("imei1").value = "";
-    document.getElementById("imei2").value = "";
-    document.getElementById("serialNumber").value = "";
-    document.getElementById("phoneNumber").value = "";
+  }
+);
 
 
-    addDeviceForm.classList.add("hidden");
-
-    addDeviceBtn.style.display = "block";
-
-
-  } finally {
-
-    saveDeviceBtn.disabled = false;
-    saveDeviceBtn.textContent = "Save Device";
-
-    // =============================
+// =============================
 // LOAD MY DEVICES
 // =============================
 
@@ -506,15 +527,20 @@ async function loadDevices() {
     </div>
   `;
 
+
   const {
     data: {
       user
     }
   } = await supabase.auth.getUser();
 
+
   if (!user) {
+
     return;
+
   }
+
 
   const {
     data,
@@ -527,6 +553,7 @@ async function loadDevices() {
       ascending: false
     });
 
+
   if (error) {
 
     console.error(error);
@@ -535,11 +562,12 @@ async function loadDevices() {
       <div class="empty-state">
         <div class="empty-icon">⚠️</div>
         <h3>Unable to load devices</h3>
-        <p>${error.message}</p>
+        <p>${escapeHtml(error.message)}</p>
       </div>
     `;
 
     return;
+
   }
 
 
@@ -554,83 +582,95 @@ async function loadDevices() {
     `;
 
     return;
+
   }
 
 
-  deviceList.innerHTML = data.map(device => `
-
-    <div
-      style="
-        border:1px solid #e5e9f0;
-        border-radius:14px;
-        padding:16px;
-        margin-bottom:12px;
-      "
-    >
+  deviceList.innerHTML = data.map(
+    device => `
 
       <div
         style="
-          display:flex;
-          justify-content:space-between;
-          gap:10px;
-          align-items:flex-start;
+          border:1px solid #e5e9f0;
+          border-radius:14px;
+          padding:16px;
+          margin-bottom:12px;
         "
       >
 
-        <div>
-
-          <h3 style="margin-bottom:5px;">
-            📱 ${escapeHtml(device.device_name)}
-          </h3>
-
-          <p style="color:#667085;font-size:13px;">
-            ${escapeHtml(device.manufacturer || "")}
-            ${escapeHtml(device.model || "")}
-          </p>
-
-        </div>
-
-
-        <span
+        <div
           style="
-            background:#eef2f7;
-            padding:5px 9px;
-            border-radius:20px;
-            font-size:11px;
-            font-weight:600;
+            display:flex;
+            justify-content:space-between;
+            gap:10px;
+            align-items:flex-start;
           "
         >
-          ${escapeHtml(device.status)}
-        </span>
 
-      </div>
+          <div>
+
+            <h3 style="margin-bottom:5px;">
+              📱 ${escapeHtml(device.device_name)}
+            </h3>
+
+            <p
+              style="
+                color:#667085;
+                font-size:13px;
+              "
+            >
+              ${escapeHtml(device.manufacturer || "")}
+              ${escapeHtml(device.model || "")}
+            </p>
+
+          </div>
 
 
-      <div
-        style="
-          margin-top:12px;
-          font-size:12px;
-          color:#667085;
-          line-height:1.7;
-        "
-      >
+          <span
+            style="
+              background:#eef2f7;
+              padding:5px 9px;
+              border-radius:20px;
+              font-size:11px;
+              font-weight:600;
+            "
+          >
+            ${escapeHtml(device.status)}
+          </span>
 
-        <div>
-          IMEI:
-          ${maskImei(device.imei_1)}
         </div>
 
-        ${
-          device.phone_number
-            ? `<div>Phone: ${escapeHtml(device.phone_number)}</div>`
-            : ""
-        }
+
+        <div
+          style="
+            margin-top:12px;
+            font-size:12px;
+            color:#667085;
+            line-height:1.7;
+          "
+        >
+
+          <div>
+            IMEI:
+            ${maskImei(device.imei_1)}
+          </div>
+
+
+          ${
+            device.phone_number
+              ? `<div>
+                   Phone:
+                   ${escapeHtml(device.phone_number)}
+                 </div>`
+              : ""
+          }
+
+        </div>
 
       </div>
 
-    </div>
-
-  `).join("");
+    `
+  ).join("");
 
 }
 
@@ -642,8 +682,11 @@ async function loadDevices() {
 function escapeHtml(value) {
 
   if (!value) {
+
     return "";
+
   }
+
 
   return String(value)
     .replaceAll("&", "&amp;")
@@ -658,19 +701,29 @@ function escapeHtml(value) {
 function maskImei(imei) {
 
   if (!imei) {
+
     return "Not provided";
+
   }
+
 
   const value = String(imei);
 
+
   if (value.length <= 4) {
+
     return "••••";
+
   }
+
 
   return "••••••••" + value.slice(-4);
 
 }
 
-  }
 
-});
+// =============================
+// START APPLICATION
+// =============================
+
+checkSession();
