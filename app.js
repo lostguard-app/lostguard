@@ -5,12 +5,13 @@ const supabase = createClient(
   SUPABASE_PUBLISHABLE_KEY
 );
 
-window.supabase = supabase;
 
+// =============================
+// ELEMENTS
+// =============================
 
-// ─────────────────────────────
-// Elements
-// ─────────────────────────────
+const authView = document.getElementById("authView");
+const dashboardView = document.getElementById("dashboardView");
 
 const loginView = document.getElementById("loginView");
 const registerView = document.getElementById("registerView");
@@ -21,12 +22,17 @@ const registerBtn = document.getElementById("registerBtn");
 const showRegisterBtn = document.getElementById("showRegisterBtn");
 const showLoginBtn = document.getElementById("showLoginBtn");
 
+const logoutBtn = document.getElementById("logoutBtn");
+
 const status = document.getElementById("status");
 
+const welcomeName = document.getElementById("welcomeName");
+const welcomeEmail = document.getElementById("welcomeEmail");
 
-// ─────────────────────────────
-// Status message
-// ─────────────────────────────
+
+// =============================
+// STATUS
+// =============================
 
 function showStatus(message) {
   status.textContent = message;
@@ -34,9 +40,45 @@ function showStatus(message) {
 }
 
 
-// ─────────────────────────────
-// Switch to Register
-// ─────────────────────────────
+// =============================
+// SHOW LOGIN
+// =============================
+
+function showLogin() {
+
+  authView.style.display = "flex";
+  dashboardView.style.display = "none";
+
+  loginView.classList.remove("hidden");
+  registerView.classList.add("hidden");
+
+  status.style.display = "none";
+}
+
+
+// =============================
+// SHOW DASHBOARD
+// =============================
+
+function showDashboard(user) {
+
+  authView.style.display = "none";
+  dashboardView.style.display = "block";
+
+  const name =
+    user.user_metadata?.full_name ||
+    user.email?.split("@")[0] ||
+    "User";
+
+  welcomeName.textContent = name;
+  welcomeEmail.textContent = user.email || "";
+
+}
+
+
+// =============================
+// REGISTER / LOGIN SWITCH
+// =============================
 
 showRegisterBtn.addEventListener("click", () => {
 
@@ -44,12 +86,9 @@ showRegisterBtn.addEventListener("click", () => {
   registerView.classList.remove("hidden");
 
   status.style.display = "none";
+
 });
 
-
-// ─────────────────────────────
-// Switch to Login
-// ─────────────────────────────
 
 showLoginBtn.addEventListener("click", () => {
 
@@ -57,12 +96,13 @@ showLoginBtn.addEventListener("click", () => {
   loginView.classList.remove("hidden");
 
   status.style.display = "none";
+
 });
 
 
-// ─────────────────────────────
-// Register
-// ─────────────────────────────
+// =============================
+// REGISTER
+// =============================
 
 registerBtn.addEventListener("click", async () => {
 
@@ -94,7 +134,7 @@ registerBtn.addEventListener("click", async () => {
 
   try {
 
-    const { data, error } =
+    const { error } =
       await supabase.auth.signUp({
         email,
         password,
@@ -107,8 +147,9 @@ registerBtn.addEventListener("click", async () => {
 
 
     if (error) {
-      console.error(error);
+
       showStatus(error.message);
+
       return;
     }
 
@@ -116,6 +157,7 @@ registerBtn.addEventListener("click", async () => {
     showStatus(
       "Account created successfully. Please check your email to verify your account."
     );
+
 
     document.getElementById("registerName").value = "";
     document.getElementById("registerEmail").value = "";
@@ -132,9 +174,9 @@ registerBtn.addEventListener("click", async () => {
 });
 
 
-// ─────────────────────────────
-// Login
-// ─────────────────────────────
+// =============================
+// LOGIN
+// =============================
 
 loginBtn.addEventListener("click", async () => {
 
@@ -146,7 +188,11 @@ loginBtn.addEventListener("click", async () => {
 
 
   if (!email || !password) {
-    showStatus("Please enter your email and password.");
+
+    showStatus(
+      "Please enter your email and password."
+    );
+
     return;
   }
 
@@ -165,17 +211,14 @@ loginBtn.addEventListener("click", async () => {
 
 
     if (error) {
-      console.error(error);
+
       showStatus(error.message);
+
       return;
     }
 
 
-    console.log("Logged in:", data);
-
-    showStatus(
-      "Login successful. Welcome to LostGuard!"
-    );
+    showDashboard(data.user);
 
 
   } finally {
@@ -188,9 +231,40 @@ loginBtn.addEventListener("click", async () => {
 });
 
 
-// ─────────────────────────────
-// Check existing session
-// ─────────────────────────────
+// =============================
+// LOGOUT
+// =============================
+
+logoutBtn.addEventListener("click", async () => {
+
+  logoutBtn.disabled = true;
+  logoutBtn.textContent = "Logging out...";
+
+
+  const { error } =
+    await supabase.auth.signOut();
+
+
+  logoutBtn.disabled = false;
+  logoutBtn.textContent = "Logout";
+
+
+  if (error) {
+
+    console.error(error);
+
+    return;
+  }
+
+
+  showLogin();
+
+});
+
+
+// =============================
+// CHECK EXISTING SESSION
+// =============================
 
 async function checkSession() {
 
@@ -199,29 +273,31 @@ async function checkSession() {
 
 
   if (error) {
+
     console.error(error);
+
+    showLogin();
+
     return;
   }
 
 
   if (data.session) {
 
-    console.log(
-      "Existing session:",
-      data.session.user.email
-    );
+    showDashboard(data.session.user);
+
+  } else {
+
+    showLogin();
 
   }
 
 }
 
 
-checkSession();
-
-
-// ─────────────────────────────
-// Auth state listener
-// ─────────────────────────────
+// =============================
+// AUTH STATE CHANGES
+// =============================
 
 supabase.auth.onAuthStateChange(
   (event, session) => {
@@ -231,14 +307,20 @@ supabase.auth.onAuthStateChange(
       event
     );
 
-    if (session) {
+    if (
+      event === "SIGNED_OUT"
+    ) {
 
-      console.log(
-        "Authenticated user:",
-        session.user.email
-      );
+      showLogin();
 
     }
 
   }
 );
+
+
+// =============================
+// START
+// =============================
+
+checkSession();
