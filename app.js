@@ -1108,7 +1108,7 @@ async function reportDeviceLost(deviceId) {
       device_id: deviceId,
       owner_id: user.id
     })
-    .select("case_id")
+    .select("id, case_id")
     .single();
 
 
@@ -1129,19 +1129,57 @@ async function reportDeviceLost(deviceId) {
 
 
   // =============================
-  // SUCCESS
+  // CREATE FIRST TIMELINE EVENT
   // =============================
 
-  showStatus(
-    "Device reported as lost. Recovery Case: " +
-    recoveryCase.case_id
-  );
+  const {
+    error: eventError
+  } = await supabase
+    .from("recovery_case_events")
+    .insert({
 
+      case_id: recoveryCase.id,
+
+      event_type: "lost_reported",
+
+      title: "Device reported lost",
+
+      description:
+        "The device owner reported this device as lost."
+
+    });
+
+
+  if (eventError) {
+
+    console.error(eventError);
+
+    showStatus(
+      "Recovery case created, but timeline event could not be created."
+    );
+
+  } else {
+
+    showStatus(
+      "Device reported as lost. Recovery Case: " +
+      recoveryCase.case_id
+    );
+
+  }
+
+
+  // =============================
+  // CLOSE PANEL
+  // =============================
 
   lostDevicePanel.classList.add("hidden");
 
   reportLostBtn.style.display = "block";
 
+
+  // =============================
+  // REFRESH DEVICES
+  // =============================
 
   await loadDevices();
 
