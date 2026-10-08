@@ -360,7 +360,8 @@ cancelDeviceBtn.addEventListener("click", () => {
 // SAVE DEVICE
 // =============================
 
-saveDeviceBtn.addEventListener("click", async () => {
+saveDeviceBtn.addEventListener("click", async (event) => {
+  event.preventDefault();
 
   const deviceName =
     document.getElementById("deviceName").value.trim();
