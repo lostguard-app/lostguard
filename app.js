@@ -29,6 +29,11 @@ const status = document.getElementById("status");
 const welcomeName = document.getElementById("welcomeName");
 const welcomeEmail = document.getElementById("welcomeEmail");
 
+const addDeviceBtn = document.getElementById("addDeviceBtn");
+const addDeviceForm = document.getElementById("addDeviceForm");
+const saveDeviceBtn = document.getElementById("saveDeviceBtn");
+const cancelDeviceBtn = document.getElementById("cancelDeviceBtn");
+const deviceList = document.getElementById("deviceList");
 
 // =============================
 // STATUS
@@ -324,3 +329,163 @@ supabase.auth.onAuthStateChange(
 // =============================
 
 checkSession();
+
+// =============================
+// ADD DEVICE
+// =============================
+
+addDeviceBtn.addEventListener("click", () => {
+
+  addDeviceForm.classList.remove("hidden");
+
+  addDeviceBtn.style.display = "none";
+
+});
+
+
+// =============================
+// CANCEL ADD DEVICE
+// =============================
+
+cancelDeviceBtn.addEventListener("click", () => {
+
+  addDeviceForm.classList.add("hidden");
+
+  addDeviceBtn.style.display = "block";
+
+});
+
+
+// =============================
+// SAVE DEVICE
+// =============================
+
+saveDeviceBtn.addEventListener("click", async () => {
+
+  const deviceName =
+    document.getElementById("deviceName").value.trim();
+
+  const manufacturer =
+    document.getElementById("manufacturer").value.trim();
+
+  const model =
+    document.getElementById("model").value.trim();
+
+  const imei1 =
+    document.getElementById("imei1").value.trim();
+
+  const imei2 =
+    document.getElementById("imei2").value.trim();
+
+  const serialNumber =
+    document.getElementById("serialNumber").value.trim();
+
+  const phoneNumber =
+    document.getElementById("phoneNumber").value.trim();
+
+
+  if (!deviceName) {
+
+    showStatus("Please enter a device name.");
+
+    return;
+
+  }
+
+
+  if (!imei1) {
+
+    showStatus("Please enter IMEI 1.");
+
+    return;
+
+  }
+
+
+  saveDeviceBtn.disabled = true;
+  saveDeviceBtn.textContent = "Saving...";
+
+
+  try {
+
+    const {
+      data: {
+        user
+      }
+    } = await supabase.auth.getUser();
+
+
+    if (!user) {
+
+      showStatus("Please login again.");
+
+      return;
+
+    }
+
+
+    const {
+      error
+    } = await supabase
+      .from("devices")
+      .insert({
+
+        owner_id: user.id,
+
+        device_name: deviceName,
+
+        manufacturer: manufacturer,
+
+        model: model,
+
+        imei_1: imei1,
+
+        imei_2: imei2 || null,
+
+        serial_number: serialNumber || null,
+
+        phone_number: phoneNumber || null
+
+      });
+
+
+    if (error) {
+
+      console.error(error);
+
+      showStatus(
+        "Unable to save device: " + error.message
+      );
+
+      return;
+
+    }
+
+
+    showStatus("Device added successfully!");
+
+
+    // Clear form
+
+    document.getElementById("deviceName").value = "";
+    document.getElementById("manufacturer").value = "";
+    document.getElementById("model").value = "";
+    document.getElementById("imei1").value = "";
+    document.getElementById("imei2").value = "";
+    document.getElementById("serialNumber").value = "";
+    document.getElementById("phoneNumber").value = "";
+
+
+    addDeviceForm.classList.add("hidden");
+
+    addDeviceBtn.style.display = "block";
+
+
+  } finally {
+
+    saveDeviceBtn.disabled = false;
+    saveDeviceBtn.textContent = "Save Device";
+
+  }
+
+});
