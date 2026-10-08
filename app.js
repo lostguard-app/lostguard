@@ -800,8 +800,20 @@ async function loadDevices() {
           font-weight:600;
         "
       >
-        Recovery Case:
-        ${escapeHtml(device.recovery_cases[0].case_id)}
+        <button
+  type="button"
+  class="secondary-btn"
+  data-case-id="${escapeHtml(device.recovery_cases[0].case_id)}"
+  style="
+    margin-top:8px;
+    width:auto;
+    padding:8px 12px;
+    font-size:12px;
+  "
+>
+  🔎 Recovery Case:
+  ${escapeHtml(device.recovery_cases[0].case_id)}
+</button>
       </div>
     `
     : ""
