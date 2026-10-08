@@ -377,9 +377,17 @@ supabase.auth.onAuthStateChange(
 
 foundPhoneBtn.addEventListener("click", () => {
 
-  console.log("I FOUND A PHONE BUTTON CLICKED");
+  const finderPanel =
+    document.getElementById("finderPanel");
 
-  alert("I Found a Phone button is working!");
+  if (!finderPanel) {
+    console.error("Finder panel not found in HTML.");
+    return;
+  }
+
+  finderPanel.classList.remove("hidden");
+
+  foundPhoneBtn.style.display = "none";
 
 });
 
