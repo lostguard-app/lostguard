@@ -78,6 +78,8 @@ function showDashboard(user) {
   welcomeName.textContent = name;
   welcomeEmail.textContent = user.email || "";
 
+    loadDevices();
+
 }
 
 
@@ -490,6 +492,184 @@ saveDeviceBtn.addEventListener("click", async (event) => {
 
     saveDeviceBtn.disabled = false;
     saveDeviceBtn.textContent = "Save Device";
+
+    // =============================
+// LOAD MY DEVICES
+// =============================
+
+async function loadDevices() {
+
+  deviceList.innerHTML = `
+    <div class="empty-state">
+      <div class="empty-icon">⏳</div>
+      <h3>Loading devices...</h3>
+    </div>
+  `;
+
+  const {
+    data: {
+      user
+    }
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return;
+  }
+
+  const {
+    data,
+    error
+  } = await supabase
+    .from("devices")
+    .select("*")
+    .eq("owner_id", user.id)
+    .order("created_at", {
+      ascending: false
+    });
+
+  if (error) {
+
+    console.error(error);
+
+    deviceList.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">⚠️</div>
+        <h3>Unable to load devices</h3>
+        <p>${error.message}</p>
+      </div>
+    `;
+
+    return;
+  }
+
+
+  if (!data || data.length === 0) {
+
+    deviceList.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">📱</div>
+        <h3>No devices registered yet</h3>
+        <p>Register your phone to start protecting it.</p>
+      </div>
+    `;
+
+    return;
+  }
+
+
+  deviceList.innerHTML = data.map(device => `
+
+    <div
+      style="
+        border:1px solid #e5e9f0;
+        border-radius:14px;
+        padding:16px;
+        margin-bottom:12px;
+      "
+    >
+
+      <div
+        style="
+          display:flex;
+          justify-content:space-between;
+          gap:10px;
+          align-items:flex-start;
+        "
+      >
+
+        <div>
+
+          <h3 style="margin-bottom:5px;">
+            📱 ${escapeHtml(device.device_name)}
+          </h3>
+
+          <p style="color:#667085;font-size:13px;">
+            ${escapeHtml(device.manufacturer || "")}
+            ${escapeHtml(device.model || "")}
+          </p>
+
+        </div>
+
+
+        <span
+          style="
+            background:#eef2f7;
+            padding:5px 9px;
+            border-radius:20px;
+            font-size:11px;
+            font-weight:600;
+          "
+        >
+          ${escapeHtml(device.status)}
+        </span>
+
+      </div>
+
+
+      <div
+        style="
+          margin-top:12px;
+          font-size:12px;
+          color:#667085;
+          line-height:1.7;
+        "
+      >
+
+        <div>
+          IMEI:
+          ${maskImei(device.imei_1)}
+        </div>
+
+        ${
+          device.phone_number
+            ? `<div>Phone: ${escapeHtml(device.phone_number)}</div>`
+            : ""
+        }
+
+      </div>
+
+    </div>
+
+  `).join("");
+
+}
+
+
+// =============================
+// SECURITY HELPERS
+// =============================
+
+function escapeHtml(value) {
+
+  if (!value) {
+    return "";
+  }
+
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+
+}
+
+
+function maskImei(imei) {
+
+  if (!imei) {
+    return "Not provided";
+  }
+
+  const value = String(imei);
+
+  if (value.length <= 4) {
+    return "••••";
+  }
+
+  return "••••••••" + value.slice(-4);
+
+}
 
   }
 
