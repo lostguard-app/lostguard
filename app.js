@@ -35,6 +35,24 @@ const saveDeviceBtn = document.getElementById("saveDeviceBtn");
 const cancelDeviceBtn = document.getElementById("cancelDeviceBtn");
 const deviceList = document.getElementById("deviceList");
 
+const caseDetailsPanel =
+  document.getElementById("caseDetailsPanel");
+
+const caseDetailsId =
+  document.getElementById("caseDetailsId");
+
+const caseDetailsDevice =
+  document.getElementById("caseDetailsDevice");
+
+const caseDetailsStatus =
+  document.getElementById("caseDetailsStatus");
+
+const caseDetailsReported =
+  document.getElementById("caseDetailsReported");
+
+const closeCaseDetailsBtn =
+  document.getElementById("closeCaseDetailsBtn");
+
 const reportLostBtn = document.getElementById("reportLostBtn");
 const lostDevicePanel = document.getElementById("lostDevicePanel");
 const lostDeviceList = document.getElementById("lostDeviceList");
