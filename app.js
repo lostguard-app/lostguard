@@ -437,10 +437,35 @@ finderSearchBtn.addEventListener("click", async () => {
       return;
     }
 
-    console.log("Recovery case found:", data[0]);
+const result = data[0];
 
-    showStatus("Recovery Case found successfully.");
+const finderResult =
+  document.getElementById("finderResult");
 
+finderResult.style.display = "block";
+
+finderResult.innerHTML = `
+  <h3 style="margin:0 0 12px;color:#065f46;">
+    ✅ Recovery Case Found
+  </h3>
+
+  <p><strong>Case ID:</strong> ${escapeHtml(result.case_id)}</p>
+
+  <p><strong>Device:</strong> ${escapeHtml(
+    [result.device_manufacturer, result.device_model]
+      .filter(Boolean)
+      .join(" ") || "Not available"
+  )}</p>
+
+  <p><strong>Status:</strong> ${escapeHtml(result.recovery_status)}</p>
+
+  <p style="font-size:13px;color:#475569;margin-bottom:0;">
+    Thank you for helping return this device to its owner.
+  </p>
+`;
+
+showStatus("Recovery Case found successfully.");
+    
   } finally {
 
     finderSearchBtn.disabled = false;
